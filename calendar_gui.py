@@ -40,7 +40,8 @@ root = tk.Tk()
 canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
 canvas.pack()
 
-input_frame = tk.Frame(root)
+input_frame = tk.Frame(root, bg='#252525')
+input_frame.config()
 input_frame.place(relx=0, rely=0, relwidth=0.3, relheight=1)
 
 root.bind('<Return>', func=process_command)
@@ -79,6 +80,6 @@ for text_l, text_r in text_list:
 displayFrame = tk.Frame(root, bg='#1C1C1C')
 displayFrame.place(relx=0.3, rely=0, relwidth=0.7, relheight=1)
 
-root.resizable(height=False, width=False)
+# root.resizable(height=False, width=False)
 root.title('Calendar')
 root.mainloop()
