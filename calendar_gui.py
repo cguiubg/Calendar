@@ -10,6 +10,7 @@ ENTRYHEIGHT = 0.030
 FONT = ('Menlo', 12)
 INDICATOR = ' λ:'
 
+
 top_down = False
 
 def process_command(event=None):
