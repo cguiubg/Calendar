@@ -1,0 +1,12 @@
+{
+    "invert": false,
+    "indicator": " λ:",
+    "window": {
+        "height": 700,
+        "width": 1000
+    },
+    "font": {
+        "type": "Menlo",
+        "size": 12
+    }
+}

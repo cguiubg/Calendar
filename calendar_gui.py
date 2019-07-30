@@ -1,17 +1,12 @@
-import tkinter as tk, tkinter.font as tkFont
+import tkinter as tk
 import math
-
-HEIGHT = 700
-WIDTH = 1000
+import json
 
 LOWHEIGHT = 0.97
 ENTRYHEIGHT = 0.030
 
-FONT = ('Menlo', 12)
-INDICATOR = ' λ:'
-
-
-top_down = False
+with open('settings.json') as f:
+    settings = json.load(f)
 
 def process_command(event=None):
     input_ = entry.get()
@@ -19,7 +14,7 @@ def process_command(event=None):
 
 def move_command_up(string: str):
     temp_r1 = string
-    temp_l1 = INDICATOR
+    temp_l1 = settings['indicator']
     for text_l, text_r in text_list:
         text_l.config(state=tk.NORMAL)
         text_r.config(state=tk.NORMAL)
@@ -37,8 +32,10 @@ def move_command_up(string: str):
 
 root = tk.Tk()
 
-canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
+canvas = tk.Canvas(root, height=settings['window']['height'], width=settings['window']['width'])
 canvas.pack()
+
+font = (settings['font']['type'], settings['font']['size'])
 
 input_frame = tk.Frame(root, bg='#252525')
 input_frame.config()
@@ -48,11 +45,11 @@ root.bind('<Return>', func=process_command)
 
 entry_aux = tk.Entry(input_frame)
 entry = tk.Entry(input_frame)
-entry_aux.config(readonlybackground='#1C1C1C', fg='#A3f774', font=FONT, bd=0, highlightthickness=0)
-entry_aux.insert(0, INDICATOR)
+entry_aux.config(readonlybackground='#1C1C1C', fg='#A3f774', font=font, bd=0, highlightthickness=0)
+entry_aux.insert(0, settings['indicator'])
 entry_aux.config(state='readonly')
-entry.config(bg='#1C1C1C', fg='#A3f774', font=FONT, bd=0, highlightthickness=0)
-if top_down:
+entry.config(bg='#1C1C1C', fg='#A3f774', font=font, bd=0, highlightthickness=0)
+if settings['invert']:
     entry_aux.place(relx=0, rely=0, relwidth=0.10, relheight=1-LOWHEIGHT)
     entry.place(relx=0.10, rely=0, relwidth=0.90, relheight=1-LOWHEIGHT)
 else:
@@ -63,13 +60,12 @@ entry_num = int(math.ceil(LOWHEIGHT/ENTRYHEIGHT))
 
 text_list = [(tk.Entry(input_frame), tk.Entry(input_frame)) for _ in range(entry_num)]
 i = 1
-
 for text_l, text_r in text_list:
-    text_l.config(readonlybackground='#2D2D2D', fg='#F7C974', font=FONT, bd=0, highlightthickness=0)
+    text_l.config(readonlybackground='#2D2D2D', fg='#F7C974', font=font, bd=0, highlightthickness=0)
     text_l.config(state='readonly')
-    text_r.config(readonlybackground='#252525', fg='#E4F774', font=FONT, bd=0, highlightthickness=0)
+    text_r.config(readonlybackground='#252525', fg='#E4F774', font=font, bd=0, highlightthickness=0)
     text_r.config(state='readonly')
-    if top_down:
+    if settings['invert']:
         text_r.place(relx=0.1, rely=i*ENTRYHEIGHT, relwidth=0.90, relheight=ENTRYHEIGHT)
         text_l.place(relx=0, rely=i*ENTRYHEIGHT, relwidth=0.10, relheight=ENTRYHEIGHT)
     else:
