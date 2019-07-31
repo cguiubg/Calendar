@@ -13,7 +13,7 @@ with open('settings.json') as f: #opening the settings.json file
 
 #commands are passed here and then sent to the needed function
 def handle_command(event=None) -> None: 
-    input_ = entry.get()
+    input_ = entry.get('1.0', tk.END)
     move_history(input_, settings['indicator'])
 
 #takes a string for log a string for the side bar, moves all strings up the history
@@ -34,7 +34,7 @@ def move_history(text: str, side: str) -> None:
         history.config(state='readonly')
         temp_l1 = temp_l2
         temp_r1 = temp_r2
-    entry.delete(0, tk.END)
+    entry.delete('1.0', tk.END)
 
 root = tk.Tk()
 
@@ -57,19 +57,21 @@ input_frame.place(relx=0, rely=0, relwidth=0.25, relheight=1)
 
 #making the sidebar and the main input widget
 sidebar = tk.Entry(input_frame)
-entry = tk.Entry(input_frame)
+entry = tk.Text(input_frame)
 sidebar.config(readonlybackground='#536F7B', fg='#11242F', font=font, bd=0, highlightthickness=0)
 sidebar.insert(0, settings['indicator'])
 sidebar.config(state='readonly')
 entry.config(bg='#536F7B', fg='#11242F', font=font, bd=0, highlightthickness=0)
+entry.config(insertbackground='#11242F', blockcursor=True, wrap='none')
 #if invert is true in settings, history goes top (most recent) to bottom (oldest)
 if settings['invert']:
     sidebar.place(relx=0, rely=0, width=25, relheight=1-LOWEST_Y)
-    entry.place(x=25, rely=0, relwidth=0.95, relheight=1-LOWEST_Y)
+    entry.place(x=25, rely=0, relwidth=0.93, relheight=1-LOWEST_Y)
 #otherwise, history goes bottom (most recent) to top (oldest)
 else:
     sidebar.place(relx=0, rely=LOWEST_Y, width=25, relheight=1-LOWEST_Y)
-    entry.place(x=25, rely=LOWEST_Y, relwidth=0.95, relheight=1-LOWEST_Y)
+    entry.place(x=25, rely=LOWEST_Y, relwidth=0.93, relheight=1-LOWEST_Y)
+entry.focus_set()
 
 #finding the number of entry widgets necesarry for the history log
 entry_num = int(math.ceil(LOWEST_Y/ENTRY_HEIGHT))
