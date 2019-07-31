@@ -2,8 +2,8 @@
     "invert": false,
     "indicator": " λ:",
     "window": {
-        "height": 700,
-        "width": 1000
+        "height": 500,
+        "width": 1200
     },
     "font": {
         "type": "Menlo",
