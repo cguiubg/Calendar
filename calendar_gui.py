@@ -95,22 +95,25 @@ for side, history in text_log:
 displayFrame = tk.Frame(root, bg='#1C1C1C')
 displayFrame.place(relx=0.25, rely=0, relwidth=0.75, relheight=1)
 
+#making month header
 month_label = tk.Label(displayFrame, bg ='#000000', text='July 2019', anchor='w', font=month_font, padx=5)
 month_label.config(fg='#3D7D9F')
 month_label.place(relx=0, rely=0, relwidth=1, relheight=.1)
 
 week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
+#creating labels for days
 days_labels = [tk.Label(displayFrame, bg='#11242F', fg='#30759F', font=font, text=day) for day in week]
 i = 0
 split_across = 1/7
+#placing each day label
 for day in days_labels:
     day.place(relx=split_across*i, rely=.1, relwidth=split_across, relheight=0.05)
     i += 1
 
+#creating the labels for the numbered dates, builds and places them left to right and then down
 split_down = (1-.15)/6
 dates_list = []
-
 k = 0
 for i in range(6):
     for j in range(7):
