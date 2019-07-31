@@ -50,6 +50,7 @@ canvas.pack()
 #getting the font tuple from the settings.json
 font = (settings['font']['type'], settings['font']['size'])
 cal_font = (settings['font']['type'], settings['font']['size'] + 3)
+month_font = ('Geeza Pro', font[1]+15)
 
 #making the frame where input is displayed
 input_frame = tk.Frame(root, bg='#151515')
@@ -96,8 +97,6 @@ for side, history in text_log:
 displayFrame = tk.Frame(root, bg='#1C1C1C')
 displayFrame.place(relx=0.25, rely=0, relwidth=0.75, relheight=1)
 
-print(TkFont.families())
-month_font = ('Geeza Pro', font[1]+15)
 month_label = tk.Label(displayFrame, bg ='#000000', text='July 2019', anchor='w', font=month_font, padx=5)
 month_label.config(fg='#2D6D96')
 month_label.place(relx=0, rely=0, relwidth=1, relheight=.1)
