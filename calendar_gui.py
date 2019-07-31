@@ -14,8 +14,6 @@ with open('settings.json') as f: #opening the settings.json file
 #commands are passed here and then sent to the needed function
 def handle_command(event=None) -> None: 
     input_ = entry.get()
-    if('august' in input_):
-        month_label.config(text='august')
     move_history(input_, settings['indicator'])
 
 #takes a string for log a string for the side bar, moves all strings up the history
@@ -98,7 +96,7 @@ displayFrame = tk.Frame(root, bg='#1C1C1C')
 displayFrame.place(relx=0.25, rely=0, relwidth=0.75, relheight=1)
 
 month_label = tk.Label(displayFrame, bg ='#000000', text='July 2019', anchor='w', font=month_font, padx=5)
-month_label.config(fg='#2D6D96')
+month_label.config(fg='#3D7D9F')
 month_label.place(relx=0, rely=0, relwidth=1, relheight=.1)
 
 week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
