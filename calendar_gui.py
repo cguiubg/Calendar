@@ -48,7 +48,7 @@ canvas.pack()
 #getting the font tuple from the settings.json
 font = (settings['font']['type'], settings['font']['size'])
 cal_font = (settings['font']['type'], settings['font']['size'] + 3)
-month_font = ('Geeza Pro', font[1]+15)
+month_font = ('Arial', font[1]+15)
 
 #making the frame where input is displayed
 input_frame = tk.Frame(root, bg='#151515')
