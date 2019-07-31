@@ -106,6 +106,7 @@ week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 days_labels = [tk.Label(displayFrame, bg='#11242F', fg='#30759F', font=font, text=day) for day in week]
 i = 0
 split_across = 1/7
+
 #placing each day label
 for day in days_labels:
     day.place(relx=split_across*i, rely=.1, relwidth=split_across, relheight=0.05)
