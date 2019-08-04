@@ -9,11 +9,11 @@ ENTRY_HEIGHT = 0.03
 ENTRY_Y = 0.03 #relative height of entry widgets
 WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
+#making the sidebar and the main input widget
 class Inputbar(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
-        #making the sidebar and the main input widget
         self.sidebar = tk.Entry(self)
         self.entry = tk.Text(self)
         self.sidebar.config(readonlybackground='#536F7B', fg='#11242F', font=parent.font, bd=0, highlightthickness=0)
@@ -21,6 +21,7 @@ class Inputbar(tk.Frame):
         self.sidebar.config(state='readonly')
         self.entry.config(bg='#536F7B', fg='#11242F', font=parent.font, bd=0, highlightthickness=0)
         self.entry.config(insertbackground='#11242F', blockcursor=True, wrap='none')
+
         #if invert is true in settings, history goes top (most recent) to bottom (oldest)
         if parent.settings['invert']:
             self.sidebar.place(relx=0, rely=0, width=25, relheight=1-LOWEST_Y)
@@ -30,6 +31,7 @@ class Inputbar(tk.Frame):
             self.sidebar.place(relx=0, rely=LOWEST_Y, width=25, relheight=1-LOWEST_Y)
             self.entry.place(x=25, rely=LOWEST_Y, relwidth=0.93, relheight=1-LOWEST_Y)
         self.entry.focus_set()
+
         #finding the number of entry widgets necesarry for the history log
         entry_num = int(math.ceil(LOWEST_Y/ENTRY_HEIGHT))
 
@@ -50,7 +52,7 @@ class Inputbar(tk.Frame):
                 history.place(x=25, rely=LOWEST_Y-i*ENTRY_Y, relwidth=0.90, relheight=ENTRY_HEIGHT)
             i += 1
         
-        #takes a string for log a string for the side bar, moves all strings up the history
+    #takes a string for log a string for the side bar, moves all strings up the history
     def move_history(self, text: str, side: str) -> None:
         temp_r1 = text
         temp_l1 = side
@@ -70,6 +72,7 @@ class Inputbar(tk.Frame):
             temp_r1 = temp_r2
         self.entry.delete('1.0', tk.END)
 
+#Main display for calendar and events
 class CalendarDisplay(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -80,21 +83,24 @@ class CalendarDisplay(tk.Frame):
         self.days_labels = [tk.Label(self, bg='#11242F', fg='#30759F', font=parent.font, text=day) for day in WEEK]
         i = 0
         split_across = 1/7
+        #builds and places top bar for days in week
         for day in self.days_labels:
             day.place(relx=split_across*i, rely=.1, relwidth=split_across, relheight=0.05)
             i += 1
         split_down = (1-.15)/6
-        dates_list = []
+        self.dates_list = []
         k = 0
+        #builds and places 42 date squares in calender
         for i in range(6):
             for j in range(7):
-                dates_list.append(tk.Label(self, bg='#151515', anchor='ne', justify='right', bd=2))
-                dates_list[k].config(text=k, font=parent.cal_font, fg='#536F7B', relief=None)
+                self.dates_list.append(tk.Label(self, bg='#151515', anchor='ne', justify='right', bd=2))
+                self.dates_list[k].config(text=k, font=parent.cal_font, fg='#536F7B', relief=None)
                 if k%7 == 0 or k%7 == 6:
-                    dates_list[k].config(bg='#121212')
-                dates_list[k].place(relx=j*split_across, rely=.15+i*split_down, relwidth=split_across, relheight=split_down)
+                    self.dates_list[k].config(bg='#121212')
+                self.dates_list[k].place(relx=j*split_across, rely=.15+i*split_down, relwidth=split_across, relheight=split_down)
                 k += 1
 
+#parent class for two classes defined above, main frame of root
 class MainApp(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -111,10 +117,12 @@ class MainApp(tk.Frame):
         self.calendar_display.place(relx=0.25, rely=0, relwidth=0.75, relheight=1)
         parent.bind('<Return>', func=self.handle_command)
 
+    #takes input from Inputbar and passes to Inputbar methods
     def handle_command(self, event=None) -> None: 
         input_ = self.inputbar.entry.get('1.0', tk.END)
         self.inputbar.move_history(input_, self.settings['indicator'])
 
+#main
 if __name__ == '__main__':
     root = tk.Tk()
     root.title('Calendar')
