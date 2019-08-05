@@ -2,6 +2,7 @@ import tkinter as tk, tkinter.font as TkFont
 import math
 import json
 import copy
+import datetime
 
 #delcaring heights entry widgets
 LOWEST_Y = 0.97 #relative y in window for the lowest entry widget
@@ -99,6 +100,10 @@ class CalendarDisplay(tk.Frame):
                     self.dates_list[k].config(bg='#121212')
                 self.dates_list[k].place(relx=j*split_across, rely=.15+i*split_down, relwidth=split_across, relheight=split_down)
                 k += 1
+        
+    def display_events(self, month: str) -> None:
+        return
+            
 
 #parent class for two classes defined above, main frame of root
 class MainApp(tk.Frame):
@@ -115,12 +120,14 @@ class MainApp(tk.Frame):
         self.calendar_display = CalendarDisplay(self, bg='#1C1C1C')
         self.inputbar.place(relx=0, rely=0, relwidth=0.25, relheight=1)
         self.calendar_display.place(relx=0.25, rely=0, relwidth=0.75, relheight=1)
-        parent.bind('<Return>', func=self.handle_command)
+        parent.bind('<Return>', func=self.update)
 
     #takes input from Inputbar and passes to Inputbar methods
-    def handle_command(self, event=None) -> None: 
+    def update(self, event=None) -> None: 
         input_ = self.inputbar.entry.get('1.0', tk.END)
         self.inputbar.move_history(input_, self.settings['indicator'])
+        month = ""  #TODO write process input function
+        self.calendar_display.display_events(month)
 
 #main
 if __name__ == '__main__':
