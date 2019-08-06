@@ -117,7 +117,7 @@ class CalendarDisplay(tk.Frame):
         day_num = 1
         for _ in range(6):
             for _ in range(7):
-                if k < start or k > start + max_days:
+                if k < start or k > start + max_days - 1:
                     self.dates_list[k].config(text='')
                 else:
                     day_num_str = str(day_num)
@@ -152,7 +152,7 @@ class MainApp(tk.Frame):
     def update(self, event=None) -> None: 
         input_ = self.inputbar.entry.get('1.0', tk.END)
         self.inputbar.move_history(input_, self.settings['indicator'])
-        date = datetime.datetime.today()
+        date = datetime.date(2019, int(input_), 1)
         self.calendar_display.display_events(date.month, date.year)
 
 #main
