@@ -1,14 +1,14 @@
 import tkinter as tk, tkinter.font as TkFont
 import math
 import json
-import copy
 import datetime
 
 #delcaring heights entry widgets
 LOWEST_Y = 0.97 #relative y in window for the lowest entry widget
 ENTRY_HEIGHT = 0.03 
 ENTRY_Y = 0.03 #relative height of entry widgets
-WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+WEEK = {'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6}
+YEAR = [(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')]
 
 #making the sidebar and the main input widget
 class Inputbar(tk.Frame):
@@ -78,10 +78,10 @@ class CalendarDisplay(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
-        self.month_label = tk.Label(self, bg ='#000000', text='July 2019', anchor='w', font=parent.month_font, padx=5)
+        self.month_label = tk.Label(self, bg ='#000000', anchor='w', font=parent.month_font, padx=5)
         self.month_label.config(fg='#3D7D9F')
         self.month_label.place(relx=0, rely=0, relwidth=1, relheight=.1)
-        self.days_labels = [tk.Label(self, bg='#11242F', fg='#30759F', font=parent.font, text=day) for day in WEEK]
+        self.days_labels = [tk.Label(self, bg='#11242F', fg='#30759F', font=parent.font, text=day) for day in WEEK.keys()]
         i = 0
         split_across = 1/7
         #builds and places top bar for days in week
@@ -95,14 +95,40 @@ class CalendarDisplay(tk.Frame):
         for i in range(6):
             for j in range(7):
                 self.dates_list.append(tk.Label(self, bg='#151515', anchor='ne', justify='right', bd=2))
-                self.dates_list[k].config(text=k, font=parent.cal_font, fg='#536F7B', relief=None)
+                self.dates_list[k].config(font=parent.cal_font, fg='#536F7B', relief=None)
                 if k%7 == 0 or k%7 == 6:
                     self.dates_list[k].config(bg='#121212')
                 self.dates_list[k].place(relx=j*split_across, rely=.15+i*split_down, relwidth=split_across, relheight=split_down)
                 k += 1
+        date = datetime.datetime.today()
+        self.display_events(date.month, date.year)
         
-    def display_events(self, month: str) -> None:
-        return
+    def display_events(self, month_index: int, year: int) -> None:
+        date = datetime.datetime(year, month_index, 1)
+        month = date.strftime('%B')
+        year = date.strftime('%Y')
+        self.month_label.config(text=date.strftime('%Y %B'))
+        with open('months.json') as f:
+            events_file = json.load(f)
+        events = events_file[month]["years"][year]
+        max_days = events_file[month]['days']
+        start = WEEK[date.strftime('%A')]
+        k = 0
+        day_num = 1
+        for _ in range(6):
+            for _ in range(7):
+                if k < start or k > start + max_days:
+                    self.dates_list[k].config(text='')
+                else:
+                    day_num_str = str(day_num)
+                    events_in_day = events.get(day_num_str)
+                    if events_in_day is not None : 
+                        events_str = day_num_str + '\n' + events_in_day
+                    else:
+                        events_str = day_num_str + '\n'
+                    self.dates_list[k].config(text=events_str)
+                    day_num += 1
+                k += 1
             
 
 #parent class for two classes defined above, main frame of root
@@ -126,8 +152,8 @@ class MainApp(tk.Frame):
     def update(self, event=None) -> None: 
         input_ = self.inputbar.entry.get('1.0', tk.END)
         self.inputbar.move_history(input_, self.settings['indicator'])
-        month = ""  #TODO write process input function
-        self.calendar_display.display_events(month)
+        date = datetime.datetime.today()
+        self.calendar_display.display_events(date.month, date.year)
 
 #main
 if __name__ == '__main__':
