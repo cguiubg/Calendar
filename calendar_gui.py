@@ -101,8 +101,7 @@ class CalendarDisplay(tk.Frame):
                     self.dates_list[k].config(bg='#121212')
                 self.dates_list[k].place(relx=j*split_across, rely=.15+i*split_down, relwidth=split_across, relheight=split_down)
                 k += 1
-        date = datetime.datetime.today()
-        self.display_events(date.month, date.year)
+        self.display_events(parent.display_date.month, parent.display_date.year)
         
     def display_events(self, month_index: int, year: int) -> None:
         date = datetime.datetime(year, month_index, 1)
@@ -124,7 +123,7 @@ class CalendarDisplay(tk.Frame):
                     day_num_str = str(day_num)
                     events_in_day = events.get(day_num_str)
                     if events_in_day is not None : 
-                        events_str = day_num_str + '\n' + events_in_day
+                        events_str = day_num_str + '\n' + '\n'.join(events_in_day)
                     else:
                         events_str = day_num_str + '\n'
                     self.dates_list[k].config(text=events_str)
@@ -139,6 +138,7 @@ class MainApp(tk.Frame):
         self.parent = parent
         with open('settings.json') as f: #opening the settings.json file
             self.settings = json.load(f)
+        self.display_date = datetime.datetime.today()
         self.config(height=self.settings['window']['height'], width=self.settings['window']['width'])
         self.font = (self.settings['font']['type'], self.settings['font']['size'])
         self.cal_font = (self.settings['font']['type'], self.settings['font']['size'] + 3)
@@ -156,8 +156,13 @@ class MainApp(tk.Frame):
         if update_str[0] is not 'e':
             if update_str[0] is 'c':
                 date = datetime.date(update_str[2], update_str[3], 1)
+                self.display_date = date
                 self.calendar_display.display_events(date.month, date.year)
-        self.inputbar.move_history(update_str[1], self.settings['indicator'])
+                self.inputbar.move_history(update_str[1], self.settings['indicator'])
+                return
+            else:
+                self.calendar_display.display_events(self.display_date.month, self.display_date.year)
+                self.inputbar.move_history(update_str[1], self.settings['indicator'])
 
 #main
 if __name__ == '__main__':
