@@ -2,6 +2,7 @@ import tkinter as tk, tkinter.font as TkFont
 import math
 import json
 import datetime
+import calendar_sup as sup
 
 #delcaring heights entry widgets
 LOWEST_Y = 0.97 #relative y in window for the lowest entry widget
@@ -150,10 +151,13 @@ class MainApp(tk.Frame):
 
     #takes input from Inputbar and passes to Inputbar methods
     def update(self, event=None) -> None: 
-        input_ = self.inputbar.entry.get('1.0', tk.END)
-        self.inputbar.move_history(input_, self.settings['indicator'])
-        date = datetime.date(2019, int(input_), 1)
-        self.calendar_display.display_events(date.month, date.year)
+        input_ = self.inputbar.entry.get('1.0', tk.END).split()
+        update_str = sup.process(input_)
+        if update_str[0] is not 'e':
+            if update_str[0] is 'c':
+                date = datetime.date(update_str[2], update_str[3], 1)
+                self.calendar_display.display_events(date.month, date.year)
+        self.inputbar.move_history(update_str[1], self.settings['indicator'])
 
 #main
 if __name__ == '__main__':
