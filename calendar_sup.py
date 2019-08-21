@@ -14,6 +14,9 @@ def go_to_month(command: list) -> list:
     display_text = 'Now displaying ' + command[1] + ' ' + command[2]
     return ['c', display_text, int(command[1]), int(command[2])]
 
+#Add an event into calendar with following format:
+#$add YYYY MM DD event
+
 def add_event(command: list) -> list:
     if '-r' in command:
         return add_event_recursive(command)
