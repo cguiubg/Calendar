@@ -108,7 +108,7 @@ class CalendarDisplay(tk.Frame):
         month = date.strftime('%B')
         year = date.strftime('%Y')
         self.month_label.config(text=date.strftime('%Y %B'))
-        with open('months.json') as f:
+        with open('./months.json') as f:
             events_file = json.load(f)
         events = events_file[month]["years"][year]
         max_days = events_file[month]['days']
@@ -136,7 +136,7 @@ class MainApp(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
-        with open('settings.json') as f: #opening the settings.json file
+        with open('./settings.json') as f: #opening the settings.json file
             self.settings = json.load(f)
         self.display_date = datetime.datetime.today()
         self.config(height=self.settings['window']['height'], width=self.settings['window']['width'])

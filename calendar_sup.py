@@ -20,7 +20,7 @@ def go_to_month(command: list) -> list:
 #add YYYY MM DD event
 
 def add_event(command: list) -> list:
-    with open('months.json') as f:
+    with open('./months.json') as f:
         months_update = json.load(f)
     event = command[4]
     day = command[3]
@@ -33,12 +33,12 @@ def add_event(command: list) -> list:
         months_update[month]['years'][year][day].append(event)
     else:
         months_update[month]['years'][year][day] = [event]
-    with open('months.json', 'w') as f:
+    with open('./months.json', 'w') as f:
         json.dump(months_update, f, indent=4)
     return ['a', 'Added event: ' + event]
 
 def remove_event(command: list) -> list:
-    with open('months.json') as f:
+    with open('./months.json') as f:
         months_update = json.load(f)
     event = command[4]
     day = command[3]
@@ -54,6 +54,6 @@ def remove_event(command: list) -> list:
             return ['e', 'Event not found']
     else:
         return ['e', 'Event not found']
-    with open('months.json', 'w') as f:
+    with open('./months.json', 'w') as f:
         json.dump(months_update, f, indent=4)
     return ['r', 'Removed event: ' + event]
