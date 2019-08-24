@@ -153,16 +153,15 @@ class MainApp(tk.Frame):
     def update(self, event=None) -> None: 
         input_ = self.inputbar.entry.get('1.0', tk.END).split()
         update_str = sup.process(input_)
-        if update_str[0] is not 'e':
-            if update_str[0] is 'c':
-                date = datetime.date(update_str[2], update_str[3], 1)
-                self.display_date = date
-                self.calendar_display.display_events(date.month, date.year)
-                self.inputbar.move_history(update_str[1], self.settings['indicator'])
-                return
-            else:
-                self.calendar_display.display_events(self.display_date.month, self.display_date.year)
-                self.inputbar.move_history(update_str[1], self.settings['indicator'])
+        if update_str[0] is 'c':
+            date = datetime.date(update_str[2], update_str[3], 1)
+            self.display_date = date
+            self.calendar_display.display_events(date.month, date.year)
+            self.inputbar.move_history(update_str[1], self.settings['indicator'])
+            return
+        else:
+            self.calendar_display.display_events(self.display_date.month, self.display_date.year)
+            self.inputbar.move_history(update_str[1], self.settings['indicator'])
 
 #main
 if __name__ == '__main__':

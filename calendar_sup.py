@@ -8,6 +8,8 @@ def process(command: list=None) -> list:
         return go_to_month(command)
     if command[0] == 'add':
         return add_event(command)
+    if command[0] == 'rm':
+        return remove_event(command)
     return ['u', 'Unknown command']
 
 def go_to_month(command: list) -> list:
@@ -15,36 +17,43 @@ def go_to_month(command: list) -> list:
     return ['c', display_text, int(command[1]), int(command[2])]
 
 #Add an event into calendar with following format:
-#$add YYYY MM DD event
+#add YYYY MM DD event
 
 def add_event(command: list) -> list:
-    if '-r' in command:
-        return add_event_recursive(command)
+    with open('months.json') as f:
+        months_update = json.load(f)
+    event = command[4]
+    day = command[3]
+    month = int(command[2])
+    year = int(command[1])
+    date = datetime.datetime(year, month, 1)
+    month = date.strftime('%B')
+    year = date.strftime('%Y')
+    if day in months_update[month]['years'][year]:
+        months_update[month]['years'][year][day].append(event)
     else:
-        with open('months.json') as f:
-            months_update = json.load(f)
-        event = command[4]
-        day = command[3]
-        month = int(command[2])
-        year = int(command[1])
-        date = datetime.datetime(year, month, 1)
-        month = date.strftime('%B')
-        year = date.strftime('%Y')
-        if day in months_update[month]['years'][year]:
-            months_update[month]['years'][year][day].append(event)
+        months_update[month]['years'][year][day] = [event]
+    with open('months.json', 'w') as f:
+        json.dump(months_update, f, indent=4)
+    return ['a', 'Added event: ' + event]
+
+def remove_event(command: list) -> list:
+    with open('months.json') as f:
+        months_update = json.load(f)
+    event = command[4]
+    day = command[3]
+    month = int(command[2])
+    year = int(command[1])
+    date = datetime.datetime(year, month, 1)
+    month = date.strftime('%B')
+    year = date.strftime('%Y')
+    if day in months_update[month]['years'][year]:
+        if event in months_update[month]['years'][year][day]:
+            months_update[month]['years'][year][day].remove(event)
         else:
-            months_update[month]['years'][year][day] = [event]
-        with open('months.json', 'w') as f:
-            json.dump(months_update, f, indent=4)
-    return ['a', 'Added event: ' + command[4]]
-
-
-def add_event_recursive(command: list) -> list:
-    return
-
-def remove_event():
-    return
-
-def remove_event_recursive():
-    return
-
+            return ['e', 'Event not found']
+    else:
+        return ['e', 'Event not found']
+    with open('months.json', 'w') as f:
+        json.dump(months_update, f, indent=4)
+    return ['r', 'Removed event: ' + event]
